@@ -8,7 +8,7 @@ const port = process.env.PORT || 3006;
 
 app.use(express.json());
 app.use(cors({
-    origin: ["http://localhost:3005"],
+    origin: ["https://shopping-s.herokuapp.com"],
     methods: ["GET", "POST"],
     allowedHeaders:['X-Requested-With', 'content-type'],
     credentials: true,
@@ -16,10 +16,10 @@ app.use(cors({
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const db = mysql.createConnection({
-    user: "root",
-    host: "localhost",
-    password: "",
-    database: "shopping_db",
+    user: "5VWOu5POBi",
+    host: "remotemysql.com",
+    password: "pRY2hyyQlw",
+    database: "5VWOu5POBi",
 });
 
 app.get("/api/products", (req, res) => {
