@@ -76,7 +76,7 @@ app.post("/api/order", (req, res) => {
         // console.log("valueOrder", valueOrder);
         // console.log("ee", value);
 
-        const sqlInsertOrder = "INSERT INTO shopping_db.order (name, price, quantity, totalPrice, productsID, user_orderID) VALUES ?";
+        const sqlInsertOrder = "INSERT INTO 5VWOu5POBi.order (name, price, quantity, totalPrice, productsID, user_orderID) VALUES ?";
         db.query(sqlInsertOrder, [valueOrder], (err, result) => {
             console.log("order",err);
         });
