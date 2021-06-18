@@ -23,7 +23,7 @@ const port = process.env.PORT || 3006;
 
 app.use(express.json());
 // app.use(cors());
-    
+
 //     {
 //     origin: ["*"],
 //     methods: ["GET", "POST"],
@@ -56,7 +56,7 @@ app.get("/api/products", (req, res) => {
     });
 });
 
-app.post("/api/order", (req, res) => {
+app.post("/api/user-order", (req, res) => {
 
     const userName = req.body.user.name;
     const userAddress = req.body.user.address;
@@ -69,10 +69,48 @@ app.post("/api/order", (req, res) => {
     db.query(sqlInsertUserOrder,
         [userName, userAddress, userCity, userState, userPostalCode, userPhoneNumber],
         (err, result) => {
-            console.log("user",err);
+            console.log("user", err);
         });
-        
 
+
+
+    // const sqlSelectUserOrderID = "SELECT id FROM user_order WHERE name = ? ORDER BY id DESC LIMIT 1";
+    // db.query(sqlSelectUserOrderID, [userName], (err, result) => {
+
+    //     let value;
+
+    //     Object.keys(result).forEach(function (key) {
+    //         value = result[key];
+    //     });
+
+    //     const userID = value.id;
+    //     const ordered = req.body.orderedItems;
+    //     let orderItem = [];
+    //     let valueOrder = [];
+
+    //     for (let i = 0; i < ordered.length; i++) {
+
+    //         for (const key in ordered[i]) {
+    //             orderItem.push(ordered[i][key]);
+    //         };
+    //         orderItem.push(userID);
+    //         valueOrder.push(orderItem);
+    //         orderItem = [];
+    //     };
+
+    //     // console.log("order", order);
+    //     // console.log("orderItem", orderItem);
+    //     // console.log("valueOrder", valueOrder);
+    //     // console.log("ee", value);
+
+    //     const sqlInsertOrder = "INSERT INTO `order`(`name`, `price`, `quantity`, `totalPrice`, `productsID`, `user_orderID`) VALUES ?";
+    //     db.query(sqlInsertOrder, [valueOrder], (err, result) => {
+    //         console.log("order",err);
+    //     });
+});
+
+app.post("/api/order-items", (req, res) => {
+    const userName = req.body.user.name;
 
     const sqlSelectUserOrderID = "SELECT id FROM user_order WHERE name = ? ORDER BY id DESC LIMIT 1";
     db.query(sqlSelectUserOrderID, [userName], (err, result) => {
@@ -105,8 +143,9 @@ app.post("/api/order", (req, res) => {
 
         const sqlInsertOrder = "INSERT INTO `order`(`name`, `price`, `quantity`, `totalPrice`, `productsID`, `user_orderID`) VALUES ?";
         db.query(sqlInsertOrder, [valueOrder], (err, result) => {
-            console.log("order",err);
+            console.log("order", err);
         });
+
     });
 
 });
