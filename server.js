@@ -8,7 +8,7 @@ const port = process.env.PORT || 3006;
 
 app.use(express.json());
 app.use(cors({
-    origin: ["https://shopping-s.herokuapp.com"],
+    origin: false,
     methods: ["GET", "POST"],
     allowedHeaders:['X-Requested-With', 'content-type'],
     credentials: true,
