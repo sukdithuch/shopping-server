@@ -49,14 +49,18 @@ const db = mysql.createConnection({
     database: "5VWOu5POBi",
 });
 
+app.get("/api/version", (req, res) => {
+    res.json({ "version": "1.0.01" });
+});
+
 app.get("/api/products", (req, res) => {
     const sqlSelect = "SELECT * FROM products";
     db.query(sqlSelect, (err, result) => {
-        res.send(result);
+        res.json(result);
     });
 });
 
-app.post("/api/user-order", (req, res) => {
+app.post("/api/user/order", (req, res) => {
 
     const userName = req.body.user.name;
     const userAddress = req.body.user.address;
@@ -66,89 +70,124 @@ app.post("/api/user-order", (req, res) => {
     const userPhoneNumber = req.body.user.phoneNum;
 
     const sqlInsertUserOrder = "INSERT INTO user_order (name, address, city, state, postalCode, phoneNumber) VALUES (?,?,?,?,?,?)";
+
+    console.log("Start");
     db.query(sqlInsertUserOrder,
         [userName, userAddress, userCity, userState, userPostalCode, userPhoneNumber],
         (err, result) => {
+
             console.log("user", err);
-        });
+            console.log("userresult", result);
+            console.log("result.insertId:", result.insertId);
 
+            // const sqlSelectUserOrderID = "SELECT id FROM user_order WHERE name = ? ORDER BY id DESC LIMIT 1";
+            // db.query(sqlSelectUserOrderID, [userName], (err, result) => {
 
+            //     let value;
 
-    // const sqlSelectUserOrderID = "SELECT id FROM user_order WHERE name = ? ORDER BY id DESC LIMIT 1";
-    // db.query(sqlSelectUserOrderID, [userName], (err, result) => {
+            //     Object.keys(result).forEach(function (key) {
+            //         value = result[key];
+            //     });
 
-    //     let value;
+            //     const userID = value.id;
+            //     const ordered = req.body.orderedItems;
+            //     let orderItem = [];
+            //     let valueOrder = [];
 
-    //     Object.keys(result).forEach(function (key) {
-    //         value = result[key];
-    //     });
+            //     for (let i = 0; i < ordered.length; i++) {
 
-    //     const userID = value.id;
-    //     const ordered = req.body.orderedItems;
-    //     let orderItem = [];
-    //     let valueOrder = [];
+            //         for (const key in ordered[i]) {
+            //             orderItem.push(ordered[i][key]);
+            //         };
+            //         orderItem.push(userID);
+            //         valueOrder.push(orderItem);
+            //         orderItem = [];
+            //     };
 
-    //     for (let i = 0; i < ordered.length; i++) {
+            //     // console.log("order", order);
+            //     // console.log("orderItem", orderItem);
+            //     // console.log("valueOrder", valueOrder);
+            //     // console.log("ee", value);
 
-    //         for (const key in ordered[i]) {
-    //             orderItem.push(ordered[i][key]);
-    //         };
-    //         orderItem.push(userID);
-    //         valueOrder.push(orderItem);
-    //         orderItem = [];
-    //     };
+            //     const sqlInsertOrder = "INSERT INTO `order`(`name`, `price`, `quantity`, `totalPrice`, `productsID`, `user_orderID`) VALUES ?";
+            //     db.query(sqlInsertOrder, [valueOrder], (err, result) => {
+            //         console.log("order", err);
+            //     });
+            // });
 
-    //     // console.log("order", order);
-    //     // console.log("orderItem", orderItem);
-    //     // console.log("valueOrder", valueOrder);
-    //     // console.log("ee", value);
+            const userID = result.insertId;
+            const ordered = req.body.orderedItems;
+            let orderItem = [];
+            let valueOrder = [];
 
-    //     const sqlInsertOrder = "INSERT INTO `order`(`name`, `price`, `quantity`, `totalPrice`, `productsID`, `user_orderID`) VALUES ?";
-    //     db.query(sqlInsertOrder, [valueOrder], (err, result) => {
-    //         console.log("order",err);
-    //     });
-});
+            for (let i = 0; i < ordered.length; i++) {
 
-app.post("/api/order-items", (req, res) => {
-    const userName = req.body.user.name;
-
-    const sqlSelectUserOrderID = "SELECT id FROM user_order WHERE name = ? ORDER BY id DESC LIMIT 1";
-    db.query(sqlSelectUserOrderID, [userName], (err, result) => {
-
-        let value;
-
-        Object.keys(result).forEach(function (key) {
-            value = result[key];
-        });
-
-        const userID = value.id;
-        const ordered = req.body.orderedItems;
-        let orderItem = [];
-        let valueOrder = [];
-
-        for (let i = 0; i < ordered.length; i++) {
-
-            for (const key in ordered[i]) {
-                orderItem.push(ordered[i][key]);
+                for (const key in ordered[i]) {
+                    orderItem.push(ordered[i][key]);
+                };
+                orderItem.push(userID);
+                valueOrder.push(orderItem);
+                orderItem = [];
             };
-            orderItem.push(userID);
-            valueOrder.push(orderItem);
-            orderItem = [];
-        };
 
-        // console.log("order", order);
-        // console.log("orderItem", orderItem);
-        // console.log("valueOrder", valueOrder);
-        // console.log("ee", value);
+            // console.log("order", order);
+            // console.log("orderItem", orderItem);
+            // console.log("valueOrder", valueOrder);
+            // console.log("ee", value);
 
-        const sqlInsertOrder = "INSERT INTO `order`(`name`, `price`, `quantity`, `totalPrice`, `productsID`, `user_orderID`) VALUES ?";
-        db.query(sqlInsertOrder, [valueOrder], (err, result) => {
-            console.log("order", err);
+            const sqlInsertOrder = "INSERT INTO `order`(`name`, `price`, `quantity`, `totalPrice`, `productsID`, `user_orderID`) VALUES ?";
+            db.query(sqlInsertOrder, [valueOrder], (err, innerResult) => {
+                console.log("order", innerResult);
+                res.json({ "orderId": userID });
+            });
+
+
         });
 
-    });
+
 
 });
+
+// app.post("/api/order-items", (req, res) => {
+//     const userName = req.body.user.name;
+
+//     const sqlSelectUserOrderID = "SELECT id FROM user_order WHERE name = ? ORDER BY id DESC LIMIT 1";
+//     db.query(sqlSelectUserOrderID, [userName], (err, result) => {
+
+//         let value;
+
+//         Object.keys(result).forEach(function (key) {
+//             value = result[key];
+//         });
+
+//         const userID = value.id;
+//         const ordered = req.body.orderedItems;
+//         let orderItem = [];
+//         let valueOrder = [];
+
+//         for (let i = 0; i < ordered.length; i++) {
+
+//             for (const key in ordered[i]) {
+//                 orderItem.push(ordered[i][key]);
+//             };
+//             orderItem.push(userID);
+//             valueOrder.push(orderItem);
+//             orderItem = [];
+//         };
+
+//         // console.log("order", order);
+//         // console.log("orderItem", orderItem);
+//         // console.log("valueOrder", valueOrder);
+//         // console.log("ee", value);
+
+//         const sqlInsertOrder = "INSERT INTO `order`(`name`, `price`, `quantity`, `totalPrice`, `productsID`, `user_orderID`) VALUES ?";
+//         db.query(sqlInsertOrder, [valueOrder], (err, result) => {
+//             console.log("order", err);
+//         });
+
+//     });
+
+// });
 
 
 
