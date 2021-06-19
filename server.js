@@ -138,7 +138,13 @@ app.post("/api/user/order", (req, res) => {
             const sqlInsertOrder = "INSERT INTO `order`(`name`, `price`, `quantity`, `totalPrice`, `productsID`, `user_orderID`) VALUES ?";
             db.query(sqlInsertOrder, [valueOrder], (err, innerResult) => {
                 console.log("order", innerResult);
-                res.json({ "orderId": userID });
+                res.json(
+                    {
+                        "orderId": userID,
+                        "innerResult": innerResult,
+                        "err": err
+                    }
+                );
             });
 
 
