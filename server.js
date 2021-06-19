@@ -117,17 +117,19 @@ app.post("/api/user/order", (req, res) => {
 
             const userID = result.insertId;
             const ordered = req.body.orderedItems;
-            let orderItem = [];
-            let valueOrder = [];
+            // let orderItems = [];
+            let valueOrderItems = [];
 
             for (let i = 0; i < ordered.length; i++) {
-
-                for (const key in ordered[i]) {
-                    orderItem.push(ordered[i][key]);
-                };
-                orderItem.push(userID);
-                valueOrder.push(orderItem);
-                orderItem = [];
+                let orderItems = [];
+                orderItems[0] = ordered[i].title;
+                orderItems[1] = ordered[i].price;
+                orderItems[2] = ordered[i].quantity;
+                orderItems[3] = ordered[i].totalPrice;
+                orderItems[4] = ordered[i].id;
+                orderItems[5] = userID;
+              
+                valueOrderItems.push(orderItems);
             };
 
             // console.log("order", order);
@@ -136,7 +138,7 @@ app.post("/api/user/order", (req, res) => {
             // console.log("ee", value);
 
             const sqlInsertOrder = "INSERT INTO `order`(`name`, `price`, `quantity`, `totalPrice`, `productsID`, `user_orderID`) VALUES ?";
-            db.query(sqlInsertOrder, [valueOrder], (err, innerResult) => {
+            db.query(sqlInsertOrder, [valueOrderItems], (err, innerResult) => {
                 console.log("order", innerResult);
                 res.json(
                     {
