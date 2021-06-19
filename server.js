@@ -22,16 +22,16 @@ const port = process.env.PORT || 3006;
 // };
 
 app.use(express.json());
-app.use(cors(
+app.use(cors());
 
-    {
-    origin: ["https://shopping-s.herokuapp.com"],
-    methods: ["GET", "POST"],
-    allowedHeaders:['X-Requested-With', 'content-type'],
-    credentials: true,
-}
+//     {
+//     origin: ["https://shopping-s.herokuapp.com"],
+//     methods: ["GET", "POST"],
+//     allowedHeaders:['X-Requested-With', 'content-type'],
+//     credentials: true,
+// }
 
-));
+// ));
 
 // app.use((req, res, next) => {
 //     res.header("Access-Control-Allow-Origin", "*");
