@@ -51,7 +51,9 @@ app.post("/api/user/order", (req, res) => {
             console.log("result.insertId:", result.insertId);
 
           
-            const userID = result.insertId;
+//             const userID = result.insertId;
+        
+            const userID = "a";
             const ordered = req.body.orderedItems;
             let valueOrderItems = [];
 
